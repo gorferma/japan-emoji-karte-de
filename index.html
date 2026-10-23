@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Japan Emoji Map – Attractions</title>
-    <meta name="description" content="Interactive Japan map with emoji markers for attractions. Zoom, pan, filter, and share." />
+    <title>Japan-Emoji-Karte – Sehenswürdigkeiten</title>
+    <meta name="description" content="Entdecke Japans Sehenswürdigkeiten auf einer interaktiven Karte mit Emojis. Vergrößere und verschiebe die Karte, filtere nach Kategorien und teile deine Entdeckungen." />
     <meta name="theme-color" content="#0ea5e9" />
 
     <!-- Leaflet CSS -->
@@ -21,7 +21,7 @@
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%BE%3C/text%3E%3C/svg%3E" />
 
-    <link rel="stylesheet" href="./style.css?v=2025-08-25-1" />
+    <link rel="stylesheet" href="./style.css?v=2026-10-23-de-1" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <!-- MarkerCluster CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
@@ -29,17 +29,17 @@
   </head>
   <body>
     <header class="app-header" role="banner">
-      <button id="btn-filter" class="btn btn-hamburger" type="button" title="Filter & Categories" aria-label="Open filter & categories">
+      <button id="btn-filter" class="btn btn-hamburger" type="button" title="Filter und Kategorien" aria-label="Filter und Kategorien öffnen">
         <span></span><span></span><span></span>
       </button>
-      <div class="brand" aria-label="Japan Emoji Map">🇯🇵 Japan Emoji Map</div>
-      <nav class="app-actions" aria-label="Page tools">
-        <button id="btn-share" class="btn btn-primary" type="button" title="Share page or copy link">Share</button>
-        <button id="btn-theme" class="btn" type="button" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">🌗</button>
+      <div class="brand" aria-label="Japan-Emoji-Karte">🇯🇵 Japan-Emoji-Karte</div>
+      <nav class="app-actions" aria-label="Seitenaktionen">
+        <button id="btn-share" class="btn btn-primary" type="button" title="Seite teilen oder Link kopieren">Teilen</button>
+        <button id="btn-theme" class="btn" type="button" title="Zwischen hellem und dunklem Design wechseln" aria-label="Zwischen hellem und dunklem Design wechseln">🌗</button>
       </nav>
     </header>
     <main id="main" role="main">
-      <div id="map" role="region" aria-label="Interactive map of Japan"></div>
+      <div id="map" role="region" aria-label="Interaktive Karte von Japan"></div>
     </main>
 
     <!-- Leaflet JS -->
@@ -54,8 +54,8 @@
     <!-- Twemoji: Emoji as SVG images for consistent display -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" referrerpolicy="no-referrer"></script>
 
-    <script src="./attraction-links.js?v=2025-08-25-1"></script>
-    <script src="./attractions.js?v=2025-08-25-1"></script>
-    <script src="./script.js?v=2025-08-26-1"></script>
+    <script src="./attraction-links.js?v=2026-10-23-de-1"></script>
+    <script src="./attractions.js?v=2026-10-23-de-1"></script>
+    <script src="./script.js?v=2026-10-23-de-1"></script>
   </body>
 </html>

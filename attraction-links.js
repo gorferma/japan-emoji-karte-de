@@ -148,11 +148,11 @@ window.attractionLinks = {
   "Iriomote (Mangroves & Waterfalls)": "https://en.wikipedia.org/wiki/Iriomote-jima"
 };
 
-// Force all links to be English Google searches of the attraction name
+// Deutsche Google-Suche; die ursprünglichen Namen bleiben stabile Zuordnungsschlüssel.
 (function toGoogleSearchLinks(){
   try {
     const map = window.attractionLinks || {};
-    const params = new URLSearchParams({ hl: 'en', gl: 'us', lr: 'lang_en' });
+    const params = new URLSearchParams({ hl: 'de', gl: 'de', lr: 'lang_de' });
     Object.keys(map).forEach((name) => {
       const q = encodeURIComponent(name);
       map[name] = `https://www.google.com/search?q=${q}&${params.toString()}`;

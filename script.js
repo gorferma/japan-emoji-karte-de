@@ -1,7 +1,18 @@
 // Initialize map
 const map = L.map("map", {
-  zoomControl: true, // +/- control (hidden on mobile via CSS)
+  zoomControl: false, // German zoom control is added below (hidden on mobile via CSS)
   worldCopyJump: true
+});
+L.control.zoom({ zoomInTitle: 'Vergrößern', zoomOutTitle: 'Verkleinern' }).addTo(map);
+map.attributionControl.setPrefix('<a href="https://leafletjs.com" title="JavaScript-Bibliothek für interaktive Karten">Leaflet</a>');
+
+// Leaflet's popup close button has a fixed English accessibility label.
+map.on('popupopen', ({ popup }) => {
+  const closeButton = popup.getElement()?.querySelector('.leaflet-popup-close-button');
+  if (closeButton) {
+    closeButton.setAttribute('aria-label', 'Schließen');
+    closeButton.setAttribute('title', 'Schließen');
+  }
 });
 
 // Custom pane for lightweight dots (rendered below markers, above tiles)
@@ -20,11 +31,11 @@ map.getPane('dots-pane').style.pointerEvents = 'auto';
   } catch {}
 })();
 
-// OpenStreetMap tiles with English labels and attribution
+// OpenStreetMap tiles with German-style labels and attribution
 const osm = L.tileLayer("https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution:
-    'Map: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> | Map style: <a href="https://www.osm.org/">OSM DE</a>'
+    'Karte: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap-Mitwirkende</a> | Kartenstil: <a href="https://www.osm.org/">OSM DE</a>'
 });
 osm.addTo(map);
 
@@ -69,18 +80,18 @@ window.addEventListener('DOMContentLoaded', () => {
       const shareUrl = location.href;
       try {
         if (navigator.share) {
-          await navigator.share({ title: document.title, text: 'Japan Emoji Map', url: shareUrl });
+          await navigator.share({ title: document.title, text: 'Japan-Emoji-Karte', url: shareUrl });
         } else if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(shareUrl);
-          alert('Link copied');
+          alert('Link kopiert');
         } else {
           const ta = document.createElement('textarea');
           ta.value = shareUrl; document.body.appendChild(ta); ta.select();
           document.execCommand('copy'); document.body.removeChild(ta);
-          alert('Link copied');
+          alert('Link kopiert');
         }
       } catch (e) {
-        console.warn('Share failed', e);
+        console.warn('Teilen fehlgeschlagen', e);
       }
     });
   }
@@ -118,7 +129,9 @@ window.addEventListener('DOMContentLoaded', () => {
 if (L.Control.geocoder) {
   L.Control.geocoder({
     defaultMarkGeocode: false,
-    placeholder: "Search in Japan…",
+    placeholder: "In Japan suchen…",
+    iconLabel: "Ort in Japan suchen",
+    errorMessage: "Keine Ergebnisse gefunden.",
     geocoder: L.Control.Geocoder.nominatim({
       geocodingQueryParams: {
         countrycodes: "jp",
@@ -127,7 +140,7 @@ if (L.Control.geocoder) {
         bounded: 1, // strict bounding to viewbox
         addressdetails: 1,
         limit: 8,
-        'accept-language': 'en'
+        'accept-language': 'de'
       }
     })
   })
@@ -164,93 +177,93 @@ function getRankClass(name) {
 }
 
 const EMOJI_KEYWORDS = [
-  { k: ['mountain','volcano','fuji','mt '], e: '🗻' },
-  { k: ['shrine','jingu','shrine','toshogu','hachimangu','inari'], e: '⛩️' },
-  { k: ['temple','dera','ji '], e: '🛕' },
-  { k: ['castle','schloss','jo '], e: '🏯' },
-  { k: ['tower','skytree'], e: '🗼' },
-  { k: ['crossing'], e: '🚦' },
-  { k: ['memorial','peace'], e: '🔊' },
-  { k: ['district','streetfood','dotonbori','chinatown'], e: '🍜' },
-  { k: ['electronics','akihabara','anime','popculture'], e: '🎮' },
-  { k: ['cherry','sakura','blossom','hanami','hirosaki'], e: '🌸' },
+  { k: ['berg','vulkan','mountain','volcano','fuji','mt '], e: '🗻' },
+  { k: ['schrein','shrine','jingu','toshogu','hachimangu','inari'], e: '⛩️' },
+  { k: ['tempel','temple','dera','ji '], e: '🛕' },
+  { k: ['burg','castle','schloss','jo '], e: '🏯' },
+  { k: ['turm','tower','skytree'], e: '🗼' },
+  { k: ['kreuzung','crossing'], e: '🚦' },
+  { k: ['denkmal','gedenk','frieden','memorial','peace'], e: '🔊' },
+  { k: ['viertel','markt','district','streetfood','dotonbori','chinatown'], e: '🍜' },
+  { k: ['elektronik','popkultur','electronics','akihabara','anime','popculture'], e: '🎮' },
+  { k: ['kirschblüte','cherry','sakura','blossom','hanami','hirosaki'], e: '🌸' },
   { k: ['nationalpark','shirakami','shiretoko','daisetsuzan'], e: '🏞️' },
-  { k: ['gorge','oirase','takachiho'], e: '🏞️' },
-  { k: ['waterfall','falls','kegon','nachi'], e: '💧' },
-  { k: ['lake','chuzenji','tazawa'], e: '🏞️' },
-  { k: ['bay','matsushima','kabira'], e: '🌊' },
-  { k: ['coast','kueste','beach','insel','island','jima','jima)','jima '], e: '🏝️' },
-  { k: ['bridge','bruecke','bridge','kintaikyo'], e: '🌉' },
-  { k: ['garden','garden','kenrokuen','korakuen','adachi'], e: '🏛️' },
+  { k: ['schlucht','gorge','oirase','takachiho'], e: '🏞️' },
+  { k: ['wasserfall','wasserfälle','waterfall','falls','kegon','nachi'], e: '💧' },
+  { k: ['see','lake','chuzenji','tazawa'], e: '🏞️' },
+  { k: ['bucht','bay','matsushima','kabira'], e: '🌊' },
+  { k: ['küste','strand','coast','kueste','beach','insel','island','jima','jima)','jima '], e: '🏝️' },
+  { k: ['brücke','bridge','bruecke','kintaikyo'], e: '🌉' },
+  { k: ['garten','gärten','garden','kenrokuen','korakuen','adachi'], e: '🏛️' },
   { k: ['museum','teamlab','ghibli'], e: '🏛️' },
   { k: ['onsen','thermal','beppu','jigokudani (onsen)'], e: '♨️' },
-  { k: ['monkey','snow monkey'], e: '🐒' },
+  { k: ['affen','monkey','snow monkey'], e: '🐒' },
   { k: ['aquarium','churaumi'], e: '🐠' },
-  { k: ['bamboo','bamboo','arashiyama'], e: '🎋' },
-  { k: ['pilgrimage','koyasan','kumano','88','henro'], e: '🥾' },
-  { k: ['festival','matsuri','fireworks','nebuta','tanabata','gion'], e: '🎆' },
-  { k: ['amusement park','disney','usj','fuji-q','legoland','huis ten bosch','ghibli park'], e: '🎢' },
-  { k: ['old town','bikan','takayama','kawagoe','kakunodate'], e: '🏘️' }
+  { k: ['bambus','bamboo','arashiyama'], e: '🎋' },
+  { k: ['pilger','wandern','pilgrimage','koyasan','kumano','88','henro'], e: '🥾' },
+  { k: ['festival','fest','feuerwerk','matsuri','fireworks','nebuta','tanabata','gion'], e: '🎆' },
+  { k: ['freizeitpark','amusement park','disney','usj','fuji-q','legoland','huis ten bosch','ghibli park'], e: '🎢' },
+  { k: ['altstadt','old town','bikan','takayama','kawagoe','kakunodate'], e: '🏘️' }
 ];
 
 const CATEGORY_LABELS = {
-  '🗻': 'Mountain/Volcano',
-  '⛩️': 'Shrine',
-  '🛕': 'Temple',
-  '🏯': 'Castle',
-  '🗼': 'Tower',
-  '🚦': 'Crossing/Sight',
-  '🕊️': 'Peace Memorial',
-  '🔊': 'Memorial',
-  '🍜': 'Food District/Market',
-  '🎮': 'Electronics/Pop Culture',
-  '🌸': 'Cherry Blossoms',
-  '🏞️': 'National Park/Gorge',
-  '💧': 'Waterfall',
+  '🗻': 'Berg/Vulkan',
+  '⛩️': 'Schrein',
+  '🛕': 'Tempel',
+  '🏯': 'Burg/Schloss',
+  '🗼': 'Turm',
+  '🚦': 'Kreuzung/Sehenswürdigkeit',
+  '🕊️': 'Friedensdenkmal',
+  '🔊': 'Denkmal',
+  '🍜': 'Gastronomieviertel/Markt',
+  '🎮': 'Elektronik/Popkultur',
+  '🌸': 'Kirschblüte',
+  '🏞️': 'Nationalpark/Schlucht',
+  '💧': 'Wasserfall',
   '♨️': 'Onsen',
-  '🌉': 'Bridge',
-  '🏝️': 'Island/Beach',
-  '🐈': 'Cat Island',
+  '🌉': 'Brücke',
+  '🏝️': 'Insel/Strand',
+  '🐈': 'Katzeninsel',
   '🐠': 'Aquarium',
-  '🏛️': 'Museum/Garden',
-  '🎢': 'Amusement Park',
+  '🏛️': 'Museum/Garten',
+  '🎢': 'Freizeitpark',
   '🎆': 'Festival',
-  '🥾': 'Pilgrimage/Hiking',
-  '🏘️': 'Old Town/Tradition',
-  '📍': 'General',
-  '❄️': 'Snow Festival',
-  '🛤️': 'Canal/Boat',
-  '🌻': 'Flower Fields',
-  '🛶': 'Boat/Canoe',
-  '🐧': 'Zoo/Penguins',
-  '🌳': 'Park/Nature',
-  '🍣': 'Sushi/Market',
-  '🌆': 'Skyline/View',
-  '🌃': 'Night District',
-  '🦌': 'Park/Deer',
-  '🌋': 'Volcano',
-  '🏜️': 'Sand Dunes',
-  '🏖️': 'Beach',
+  '🥾': 'Pilgern/Wandern',
+  '🏘️': 'Altstadt/Tradition',
+  '📍': 'Allgemein',
+  '❄️': 'Schneefestival',
+  '🛤️': 'Kanal/Boot',
+  '🌻': 'Blumenfelder',
+  '🛶': 'Boot/Kanu',
+  '🐧': 'Zoo/Pinguine',
+  '🌳': 'Park/Natur',
+  '🍣': 'Sushi/Markt',
+  '🌆': 'Stadtpanorama/Aussicht',
+  '🌃': 'Ausgehviertel',
+  '🦌': 'Park/Hirsche',
+  '🌋': 'Vulkan',
+  '🏜️': 'Sanddünen',
+  '🏖️': 'Strand',
   // Added missing ones used in data
-  '🐒': 'Monkeys',
-  '🎋': 'Bamboo Grove',
-  '🚤': 'Canal/Boat',
-  '🌊': 'Bay/Coast/Sea'
+  '🐒': 'Affen',
+  '🎋': 'Bambuswald',
+  '🚤': 'Kanal/Boot',
+  '🌊': 'Bucht/Küste/Meer'
 };
 const CATEGORY_ORDER = ['🗻','⛩️','🛕','🏯','🗼','🚦','🕊️','🍜','🎮','🌸','🏞️','💧','♨️','🌉','🏝️','🐈','🐠','🏛️','🎢','🎆','🥾','🏘️','📍'];
 
 // Curated Top-10 with fixed order (highest priority)
 const CURATED_TOP10 = [
-  'Fuji-san (Mount Fuji)',
+  'Fuji-san (Berg Fuji)',
   'Fushimi Inari Taisha',
-  'Itsukushima Shrine (Miyajima)',
-  'Himeji-jo (Himeji Castle)',
-  'Kinkaku-ji (Golden Pavilion)',
+  'Itsukushima-Schrein (Miyajima)',
+  'Himeji-jo (Burg Himeji)',
+  'Kinkaku-ji (Goldener Pavillon)',
   'Kiyomizu-dera',
-  'Nara Park & Todai-ji',
+  'Nara-Park und Todai-ji',
   'Nikko Toshogu',
-  'Hiroshima Peace Memorial',
-  'Shibuya Crossing'
+  'Friedensdenkmal Hiroshima',
+  'Shibuya-Kreuzung'
 ];
 // Assign unique scores for Top-10, strictly descending
 const CURATED_SCORES = new Map(CURATED_TOP10.map((name, i) => [name, 100 - i * 3]));
@@ -271,7 +284,16 @@ function getEmojiForAttraction(a) {
 const attractionLinks = (window.attractionLinks || {});
 function isValidHttpUrl(url) { try { const u = new URL(url); return u.protocol === 'http:' || u.protocol === 'https:'; } catch { return false; } }
 function escHtml(str) { return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
-function getAttractionUrl(a) { if (a.url && isValidHttpUrl(a.url)) return a.url; const byName = attractionLinks[a.name]; if (byName && isValidHttpUrl(byName)) return byName; return null; }
+function getAttractionUrl(a) {
+  if (a.url && isValidHttpUrl(a.url)) return a.url;
+  const byName = attractionLinks[a.linkKey || a.name];
+  if (!byName || !isValidHttpUrl(byName)) return null;
+  const url = new URL(byName);
+  if ((url.hostname === 'www.google.com' || url.hostname === 'google.com') && url.pathname === '/search') {
+    url.searchParams.set('q', a.name);
+  }
+  return url.href;
+}
 function buildPopupContent(a) {
   const name = escHtml(a.name);
   const type = escHtml(a.type);
@@ -406,7 +428,7 @@ class LODGridLayer {
       m.setIcon(emojiIcon(a.emoji, a.name, extraCls));
       return m;
     }
-    const m = L.marker([a.lat, a.lng], { icon: emojiIcon(a.emoji, a.name, extraCls) });
+    const m = L.marker([a.lat, a.lng], { icon: emojiIcon(a.emoji, a.name, extraCls), title: a.name, alt: a.name });
     m.bindPopup(buildPopupContent(a), { closeButton: true, autoPan: false });
     // Zoom to marker when clicked
     m.on('click', () => {
@@ -577,7 +599,7 @@ function buildLegendOnAdd() {
     const emojiList = [...ordered, ...extras];
 
     const listItemsHtml = emojiList.map((e, idx) => {
-      const label = CATEGORY_LABELS[e] || 'Other';
+      const label = CATEGORY_LABELS[e] || 'Sonstiges';
       const inputId = `legend-emoji-${idx}`;
       const checkedAttr = (emojiVisibility.get(e) !== false) ? 'checked' : '';
       return `
@@ -592,11 +614,11 @@ function buildLegendOnAdd() {
     const allOn = emojiList.every(e => emojiVisibility.get(e) !== false);
 
     div.innerHTML = `
-      <div class="legend-header" role="button" aria-expanded="true" tabindex="0">Legend</div>
+      <div class="legend-header" role="button" aria-expanded="true" tabindex="0">Legende</div>
       <div class="legend-all">
         <label for="legend-all">
           <input id="legend-all" type="checkbox" data-legend-all ${allOn ? 'checked' : ''}>
-          All
+          Alle
         </label>
       </div>
       <div class="legend-top10">
@@ -682,7 +704,7 @@ function renderMobileOverlayContent(container) {
   const allOn = emojiList.every(e => emojiVisibility.get(e) !== false);
 
   const listItemsHtml = emojiList.map((e) => {
-    const label = CATEGORY_LABELS[e] || 'Other';
+    const label = CATEGORY_LABELS[e] || 'Sonstiges';
     const checkedAttr = (emojiVisibility.get(e) !== false) ? 'checked' : '';
     return `
       <li>
@@ -700,13 +722,13 @@ function renderMobileOverlayContent(container) {
         <div class="mobile-overlay__header">
           <div class="mobile-overlay__handle" aria-hidden="true"></div>
           <div class="mobile-overlay__title">Filter</div>
-          <button type="button" class="mobile-overlay__close" title="Close" aria-label="Close" data-close>✕</button>
+          <button type="button" class="mobile-overlay__close" title="Schließen" aria-label="Schließen" data-close>✕</button>
         </div>
         <div class="mobile-overlay__body">
           <div class="legend-all legend-all--mobile">
             <label>
               <input type="checkbox" data-legend-all ${allOn ? 'checked' : ''}>
-              All
+              Alle
             </label>
           </div>
           <div class="legend-top10 legend-top10--mobile">
@@ -716,7 +738,7 @@ function renderMobileOverlayContent(container) {
             </label>
           </div>
           <div class="legend-search">
-            <input type="search" placeholder="Search categories…" aria-label="Search categories" />
+            <input type="search" placeholder="Kategorien suchen…" aria-label="Kategorien suchen" />
           </div>
           <ul class="legend-list legend-list--mobile">
             ${listItemsHtml}
